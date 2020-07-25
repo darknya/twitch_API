@@ -1,0 +1,95 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta http-equiv="X-UA-Compatible" content="ie=edge">
+
+  <!-- Bootstrap -->
+  <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.0/css/bootstrap.min.css" integrity="sha384-9aIt2nRpC12Uk9gS9baDl411NQApFmC26EwAOH8WgZl5MYYxFfc+NcPb1dKGj7Sk" crossorigin="anonymous">
+  <!-- font awesome icon -->
+  <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.10.1/css/all.css">
+  <link rel="stylesheet" href="./disy/style/style.min.css">
+
+  <title>Twitch channel View</title>
+</head>
+<body>
+  <div class="container">
+    <header>
+      <h1>Twitch 實況頻道 觀看人數 TOP 25</h1>
+    </header>
+    <div class="btn-group row d-flex mb-5">
+      <button class="btn btn-primary lang-btn" value=" ">不分語系</button>
+      <button class="btn btn-primary lang-btn" value="en">英文</button>
+      <button class="btn btn-primary lang-btn" value="zh">中文</button>
+      <button class="btn btn-primary lang-btn" value="ja">日文</button>
+    </div>
+    <div class="d-flex justify-content-center">
+      <div class="channel-list row"></div>
+    </div>
+  </div>
+
+  <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js" integrity="sha384-DfXdz2htPH0lsSSs5nCTpuj/zy4C+OGpamoFVy38MVBnE+IbbVYUew+OrCXaRkfj" crossorigin="anonymous"></script>
+  <script src="https://cdn.jsdelivr.net/npm/popper.js@1.16.0/dist/umd/popper.min.js" integrity="sha384-Q6E9RHvbIyZFJoft+2mJbHaEWldlvI9IOYy5n3zV9zzTtmI3UksdQRVvoxMfooAo" crossorigin="anonymous"></script>
+  <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.0/js/bootstrap.min.js" integrity="sha384-OgVRvuATP1z7JjHLkuOU7Xw704+h835Lr+6QL9UvYjZE3Ipu6Tp75j7Bh/kR0JKI" crossorigin="anonymous"></script>
+  <script src='https://cdnjs.cloudflare.com/ajax/libs/axios/0.20.0-0/axios.min.js'></script>
+  <script>
+    const clientID = 'cq357oznsg2a054k07i1bpirzapayx';
+    const apiURL = 'https://api.twitch.tv/kraken';
+    const channelList = document.querySelector('.channel-list');
+    const langBtns = document.querySelectorAll('.lang-btn');
+    let channelData = [];
+
+    function render(data) {
+      let html = '';
+      data.forEach((item) => {
+        html +=
+        `<div class="card mb-3 col-sm-12 col-md-6 col-lg-4">
+          <img src="${item.preview.medium}" class="card-img" alt="...">
+          <a href="${item.channel.url}" class="card-img-overlay" target="_blank">
+            <h5 class="card-title">${item.channel.display_name}</h5>
+            <p class="card-text">${item.channel.status}</p>
+            <p class="card-text"><small>觀眾人數: ${item.viewers}</small></p>
+          </a>
+        </div>`
+      });
+      channelList.innerHTML = html;
+    }
+    function languageChannelList(language='') {
+      axios({
+        headers: {
+          'Accept': 'application/vnd.twitchtv.v5+json',
+          'Client-ID': clientID
+        },
+        method: 'GET',
+        url: `${apiURL}/streams?language=${language}`,
+      }).then(res => {
+        console.log(res.data.streams);
+        channelData = res.data.streams;
+        render(channelData);
+      }).catch(err => console.table(err));
+    }
+    langBtns.forEach((btn) => {
+      btn.addEventListener('click',(e) => {
+        languageChannelList(e.target.value);
+      });
+    });
+    languageChannelList();
+
+    // new twitch API 目前不適用於非英文語系實況
+    // function searchAPI(search) {
+    //   axios({
+    //     headers: {
+    //       'Authorization': 'Bearer qd5u4qu8c42mjn724iwhsjurfygkko',
+    //       'Client-ID': clientID
+    //     },
+    //     method: 'GET',
+    //     url: `https://api.twitch.tv/helix/search/channels?query=${search}`,
+    //   }).then(res => {
+    //     render(res.data.data);
+    //   })
+    //   .catch(err => console.table(err));
+    // }
+  </script>
+</body>
+</html>

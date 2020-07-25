@@ -1,0 +1,39 @@
+$primary: #6441a5;
+$secondary : #b9a3e3;
+$night: #262626;
+
+body {
+  padding: 10px;
+  background: $night;
+  color: #f1f1f1;
+}
+.col-sm-12,.col-md-6 {
+  padding: 0;
+}
+
+header h1 {
+  text-align: center;
+}
+.btn-group {
+  text-align: center;
+
+  .btn-primary {
+    background: $primary;
+    border-color: $primary;
+    justify-content: center;
+    &:hover {
+      background: rgba($color: $primary, $alpha: 0.7);
+      border-color: rgba($color: $primary, $alpha: 0.7);
+    }
+  }
+}
+
+.card a {
+  color: #f1f1f1;
+  text-shadow: black 1px 1px 2px, $primary 0 0 1em;
+  transition: background .5s;
+  &:hover {
+    text-decoration: none;
+    background: rgba($color: #000, $alpha: 0.4);
+  }
+}
