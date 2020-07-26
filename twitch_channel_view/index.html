@@ -64,7 +64,6 @@
         method: 'GET',
         url: `${apiURL}/streams?language=${language}`,
       }).then(res => {
-        console.log(res.data.streams);
         channelData = res.data.streams;
         render(channelData);
       }).catch(err => console.table(err));
